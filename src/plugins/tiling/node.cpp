@@ -39,7 +39,7 @@ node_split OptimalSplitMode(node *Node)
 
 node_split NodeSplitFromString(char *Value)
 {
-    for (int Index = Split_None; Index <= Split_Horizontal; ++Index) {
+    for (int Index = Split_None; Index <= Split_Automatic; ++Index) {
         if (strcmp(Value, node_split_str[Index]) == 0) {
             return (node_split) Index;
         }

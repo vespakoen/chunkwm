@@ -420,8 +420,13 @@ void TileWindowOnSpace(macos_window *Window, macos_space *Space, virtual_space *
                     goto display_free;
                 }
 
+                node_split Split = NodeSplitFromString(CVarStringValue(CVAR_BSP_SPLIT_MODE));
                 if (InsertionPoint) {
                     Node = GetNodeWithId(VirtualSpace->Tree, InsertionPoint, VirtualSpace->Mode);
+                }
+
+                if (Split == Split_Automatic) {
+                    Node = GetLastLeafNode(VirtualSpace->Tree);
                 }
 
                 if (!Node) {
@@ -429,9 +434,16 @@ void TileWindowOnSpace(macos_window *Window, macos_space *Space, virtual_space *
                     ASSERT(Node != NULL);
                 }
 
-                node_split Split = NodeSplitFromString(CVarStringValue(CVAR_BSP_SPLIT_MODE));
                 if (Split == Split_Optimal) {
                     Split = OptimalSplitMode(Node);
+                } else if (Split == Split_Automatic) {
+                    node* FirstNode = GetFirstLeafNode(VirtualSpace->Tree);
+                    node* LastNode = GetLastLeafNode(VirtualSpace->Tree);
+                    if (FirstNode == LastNode) {
+                        Split = Split_Vertical;
+                    } else {
+                        Split = Split_Horizontal;
+                    }
                 }
 
                 CreateLeafNodePair(Node, Node->WindowId, Window->Id, Split, Space, VirtualSpace);
@@ -777,8 +789,15 @@ CreateWindowTreeForSpaceWithWindows(macos_space *Space, virtual_space *VirtualSp
             node_split Split = NodeSplitFromString(CVarStringValue(CVAR_BSP_SPLIT_MODE));
             if (Split == Split_Optimal) {
                 Split = OptimalSplitMode(New);
+            } else if (Split == Split_Automatic) {
+                node* FirstNode = GetFirstLeafNode(VirtualSpace->Tree);
+                node* LastNode = GetLastLeafNode(VirtualSpace->Tree);
+                if (FirstNode == LastNode) {
+                    Split = Split_Vertical;
+                } else {
+                    Split = Split_Horizontal;
+                }
             }
-
             CreateLeafNodePair(New, New->WindowId, Windows[Index], Split, Space, VirtualSpace);
         }
     } else if (VirtualSpace->Mode == Virtual_Space_Monocle) {
@@ -840,8 +859,15 @@ CreateDeserializedWindowTreeForSpaceWithWindows(macos_space *Space, virtual_spac
             node_split Split = NodeSplitFromString(CVarStringValue(CVAR_BSP_SPLIT_MODE));
             if (Split == Split_Optimal) {
                 Split = OptimalSplitMode(Node);
+            } else if (Split == Split_Automatic) {
+                node* FirstNode = GetFirstLeafNode(VirtualSpace->Tree);
+                node* LastNode = GetLastLeafNode(VirtualSpace->Tree);
+                if (FirstNode == LastNode) {
+                    Split = Split_Vertical;
+                } else {
+                    Split = Split_Horizontal;
+                }
             }
-
             CreateLeafNodePair(Node, Node->WindowId, Windows[Index], Split, Space, VirtualSpace);
         }
     }

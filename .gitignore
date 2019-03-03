@@ -1,2 +1,3 @@
 bin/
 /plugins
+.DS_Store

@@ -22,14 +22,16 @@ static char *node_split_str[] =
     "none",
     "optimal",
     "vertical",
-    "horizontal"
+    "horizontal",
+    "automatic"
 };
 enum node_split
 {
     Split_None = 0,
     Split_Optimal = 1,
     Split_Vertical = 2,
-    Split_Horizontal = 3
+    Split_Horizontal = 3,
+    Split_Automatic = 4
 };
 
 struct node_ids
